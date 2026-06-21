@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "repo": "EpiowAI/demo-calendar-mobile",
+    "name": "Demo Calendar Mobile",
+    "lifecycle": "active",
+    "layer": "application",
+    "summary": "Expo React Native calendar demo that reads, creates, and deletes events through the Demo Taskboard event API.",
+    "goals": [
+      "Provide the Expo mobile calendar demo for iOS, Android, and web development targets.",
+      "Own the React Native calendar screen, event cards, create-event sheet, mobile API client, and React Query hooks.",
+      "Keep the mobile event model compatible with the documented Demo Taskboard /api/events surface."
+    ],
+    "nonGoals": [
+      "Own the Demo Taskboard web/API service, database schema, enterprise doctrine, or shared scheduling platform semantics.",
+      "Own customer-specific mobile workflows outside this demo.",
+      "Own reusable scheduling contracts until they are promoted into a dedicated shared package or service."
+    ]
+  },
+  "boundaries": {
+    "owns": [
+      {
+        "name": "demo-calendar-mobile-client",
+        "description": "The Expo React Native app manifest, entrypoint, calendar screen, components, mobile styling, and app-level React Query wiring."
+      },
+      {
+        "name": "demo-calendar-mobile-api-client",
+        "description": "The mobile API client, event types, and React Query hooks that consume the deployed Demo Taskboard event API."
+      }
+    ],
+    "doesNotOwn": [
+      "The Demo Taskboard web/API service, database schema, migrations, deployment, or server-side event semantics.",
+      "Enterprise engineering doctrine and manifest schema owned by SylphxAI/doctrine.",
+      "Reusable scheduling platform semantics or customer-specific mobile workflows outside this demo."
+    ],
+    "publicSurfaces": [
+      {
+        "type": "manifest",
+        "name": "Expo application manifest",
+        "location": "app.json"
+      },
+      {
+        "type": "api",
+        "name": "Mobile event API client",
+        "location": "src/lib/api.ts"
+      },
+      {
+        "type": "documentation",
+        "name": "Package scripts and dependency metadata",
+        "location": "package.json"
+      }
+    ],
+    "allowedDependencies": [
+      {
+        "repo": "SylphxAI/doctrine",
+        "surface": "project manifest schema and engineering doctrine",
+        "direction": "peer-public"
+      },
+      {
+        "repo": "EpiowAI/demo-taskboard",
+        "surface": "deployed /api/events HTTP contract",
+        "direction": "peer-public"
+      }
+    ],
+    "forbiddenCouplings": [
+      "Do not reach into Demo Taskboard source internals, database tables, migrations, or deployment state from the mobile client.",
+      "Do not put shared scheduling platform semantics or customer-specific workflow policy into this demo mobile app.",
+      "Do not fork doctrine standards into this repository."
+    ]
+  },
+  "documentation": {
+    "adr": {
+      "path": "docs/adr/",
+      "status": "planned"
+    },
+    "specs": {
+      "path": "src/lib/api.ts",
+      "status": "present"
+    },
+    "catalog": {
+      "path": ".doctrine/project.json",
+      "status": "present"
+    },
+    "runbooks": {
+      "path": "README.md",
+      "status": "planned"
+    },
+    "generatedReferences": {
+      "path": "app.json",
+      "status": "present"
+    }
+  },
+  "delivery": {
+    "ciModel": "none",
+    "requiredContexts": [],
+    "deployPath": "No repo-local GitHub CI or deployment workflow is present. The Expo app currently runs through local Expo scripts for start, android, ios, and web targets.",
+    "productionProof": "TypeScript/Expo validation, platform launch smoke for the changed target, and event API compatibility readback against the configured demo endpoint.",
+    "recoveryClass": "source-revertable"
+  },
+  "adoption": {
+    "status": "baseline",
+    "gaps": [
+      {
+        "id": "repo-ci-workflow-missing",
+        "description": "The repository has Expo run scripts but no GitHub PR or merge_group CI workflow recorded at this baseline.",
+        "owner": "EpiowAI/demo-calendar-mobile",
+        "target": "before adoption.status becomes full"
+      },
+      {
+        "id": "api-contract-runbook-missing",
+        "description": "The mobile client hardcodes the deployed Demo Taskboard API base URL; add documented environment/configuration and compatibility smoke guidance before production lifecycle promotion.",
+        "owner": "EpiowAI/demo-calendar-mobile",
+        "target": "before production lifecycle promotion"
+      }
+    ]
+  }
+}
